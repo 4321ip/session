@@ -12,7 +12,7 @@
  */
 
 var cookie = require('cookie')
-var merge = require('utils-merge')
+var deprecate = require('depd')('express-session')
 
 /**
  * Initialize a new `Cookie` with the given `options`.
@@ -32,7 +32,9 @@ var Cookie = module.exports = function Cookie(options) {
       throw new TypeError('argument options must be a object')
     }
 
-    merge(this, options)
+    for (var key in options) {
+      this[key] = options[key]
+    }
   }
 
   this.originalMaxAge = undefined == this.originalMaxAge
@@ -77,6 +79,14 @@ Cookie.prototype = {
    */
 
   set maxAge(ms) {
+    if (ms && typeof ms !== 'number' && !(ms instanceof Date)) {
+      throw new TypeError('maxAge must be a number or Date')
+    }
+
+    if (ms instanceof Date) {
+      deprecate('maxAge as Date; pass number of milliseconds instead')
+    }
+
     this.expires = 'number' == typeof ms
       ? new Date(Date.now() + ms)
       : ms;
