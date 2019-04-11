@@ -511,10 +511,11 @@ function generateSessionId(sess) {
  */
 
 function getcookie(req, name, secrets) {
-  // header token
-  var sessionID = req.header('Kalpa-Session-Token')
-  if (sessionID) {
-    return sessionID
+  
+  // custom header token (vs cookie)
+  var sessionId = req.header('Authorization')
+  if (sessionId) {
+    return sessionId
   }
   
   var header = req.headers.cookie;
