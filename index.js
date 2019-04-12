@@ -513,7 +513,7 @@ function generateSessionId(sess) {
 function getcookie(req, name, secrets) {
   
   // custom header token (vs cookie)
-  var sessionId = req.headers.Authorization
+  var sessionId = req.header('authorization')
   if (sessionId) {
     return sessionId
   }
